@@ -52,6 +52,7 @@ app.use(
   })
 );
 app.post('/login',login.signIn);
-app.get('/createproject',projectlist.createproject)
+app.get('/createproject',projectlist.createproject);
+app.get('/projectlist',projectlist.projectlist);
 app.listen(8000);
 console.log('server is started at port 8000');
