@@ -4,7 +4,7 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/"
 exports.signIn=(req,res)=>{
 {
-    var data=req.body
+    var data=req.body;
    var Username=data.username;
    var Password=data.password;
     MongoClient.connect(url, function(err, db) {

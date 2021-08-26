@@ -1,0 +1,115 @@
+<div class="container-fluid">
+<div class="container text-center">
+  <h1>Create Project</h1>
+</div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/projectlist">List Project</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <br>
+  <!-- <label for="projectname">Project Name</label> -->
+  <div style="margin-left:10%;"><label for="projectname"><h1>Project Name</h1></label><br>
+    <input type="text" name="projectname" placeholder="project name" [(ngModel)]="projectname">
+  </div>
+  <div class="row text-center">
+      <div class="col-sm" >
+        <h1>Reason</h1>
+          <select [(ngModel)]="reason">
+          <option value="business">business</option>
+          <option value="dealership">dealership</option>
+          <option value="transport">transport</option>
+        </select>
+      </div>
+      <div class="col-sm" >
+        <h1>type</h1>
+        <select [(ngModel)]="type">
+        <option value="internal">internal</option>
+        <option value="external">external</option>
+        <option value="vendor">vendor</option>
+      </select>
+  </div>
+      <div class="col-sm" >
+        <h1>division</h1>
+        <select [(ngModel)]="division">
+          <option value="compressor">compressor</option>
+          <option value="filters">filters</option>
+          <option value="pumps">pumps</option>
+          <option value="glass">glass</option>
+          <option value="water">water heater</option>
+        </select>
+  </div>
+    </div>
+    <br>
+     <div class="row text-center"> 
+      <div class="col-sm" >
+        <h1>Category</h1>
+        <select [(ngModel)]="category">
+        <option value="quality-A">quality A</option>
+        <option value="quality-B">quality B</option>
+        <option value="quality-C">quality C</option>
+        <option value="quality-D">quality D</option>
+      </select>
+       </div>
+
+      <div class="col-sm" >
+        <h1>Priority</h1>
+          <select [(ngModel)]="Priority">
+          <option value="hign">high</option>
+          <option value="low">low</option>
+          <option value="medium">medium</option>
+        </select>
+      </div>
+      <div class="col-sm" >
+        <h1>department</h1>
+        <select [(ngModel)]="department">
+        <option value="startergy">startergy</option>
+        <option value="finance">finance</option>
+        <option value="quality">quality</option>
+        <option value="maintainance">maintainance</option>
+        <option value="store">store</option>
+        <option value="hr">hr</option>
+      </select>
+  </div>
+</div>
+<div class="row text-center">
+  <div class="col-sm" >
+    <h1>
+      Starting Date
+    </h1>
+    <div>  
+      <input type="date" [(ngModel)]="startdate" >  
+     
+  </div>
+  </div>
+  <div class="col-sm">
+      <h1>
+        End Date
+      </h1>
+      <input type="date" [(ngModel)]="enddate" >
+  </div>
+  <div class="col-sm" >
+    <h1>location</h1>
+    <select [(ngModel)]="location">
+      <option value="pune">pune</option>
+      <option value="mumbai">mumbai</option>
+      <option value="delhi">delhi</option>
+      <option value="calcutta">calcutta</option>
+      <option value="banglore">banglore</option>
+    </select>
+</div>
+</div>
+<br>
+<div class="text-center">
+  <button  class="btn btn-primary" (click)="createproject()">Create Project</button>
+</div>
+
+</div>
