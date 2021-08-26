@@ -1,8 +1,9 @@
+<app-header></app-header>
 <div class="container-fluid">
 <div class="container text-center">
   <h1>Create Project</h1>
 </div>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
     
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
@@ -14,16 +15,16 @@
         </li>
       </ul>
     </div>
-  </nav>
+  </nav> -->
   <br>
   <!-- <label for="projectname">Project Name</label> -->
-  <div style="margin-left:10%;"><label for="projectname"><h1>Project Name</h1></label><br>
-    <input type="text" name="projectname" placeholder="project name" [(ngModel)]="projectname">
+  <div ><label for="projectname"><h1>Project Name</h1></label><br>
+    <input type="text" class="form-control" name="projectname" placeholder="project name" [(ngModel)]="projectname">
   </div>
-  <div class="row text-center">
+  <div class="row">
       <div class="col-sm" >
         <h1>Reason</h1>
-          <select [(ngModel)]="reason">
+          <select [(ngModel)]="reason" class="form-control">
           <option value="business">business</option>
           <option value="dealership">dealership</option>
           <option value="transport">transport</option>
@@ -31,7 +32,7 @@
       </div>
       <div class="col-sm" >
         <h1>type</h1>
-        <select [(ngModel)]="type">
+        <select [(ngModel)]="type"class="form-control">
         <option value="internal">internal</option>
         <option value="external">external</option>
         <option value="vendor">vendor</option>
@@ -39,7 +40,7 @@
   </div>
       <div class="col-sm" >
         <h1>division</h1>
-        <select [(ngModel)]="division">
+        <select [(ngModel)]="division"class="form-control">
           <option value="compressor">compressor</option>
           <option value="filters">filters</option>
           <option value="pumps">pumps</option>
@@ -49,10 +50,10 @@
   </div>
     </div>
     <br>
-     <div class="row text-center"> 
+     <div class="row"> 
       <div class="col-sm" >
         <h1>Category</h1>
-        <select [(ngModel)]="category">
+        <select [(ngModel)]="category"class="form-control">
         <option value="quality-A">quality A</option>
         <option value="quality-B">quality B</option>
         <option value="quality-C">quality C</option>
@@ -62,7 +63,7 @@
 
       <div class="col-sm" >
         <h1>Priority</h1>
-          <select [(ngModel)]="Priority">
+          <select [(ngModel)]="Priority"class="form-control">
           <option value="hign">high</option>
           <option value="low">low</option>
           <option value="medium">medium</option>
@@ -70,7 +71,7 @@
       </div>
       <div class="col-sm" >
         <h1>department</h1>
-        <select [(ngModel)]="department">
+        <select [(ngModel)]="department"class="form-control">
         <option value="startergy">startergy</option>
         <option value="finance">finance</option>
         <option value="quality">quality</option>
@@ -80,13 +81,13 @@
       </select>
   </div>
 </div>
-<div class="row text-center">
+<div class="row">
   <div class="col-sm" >
     <h1>
       Starting Date
     </h1>
     <div>  
-      <input type="date" [(ngModel)]="startdate" >  
+      <input type="date" [(ngModel)]="startdate" class="form-control">  
      
   </div>
   </div>
@@ -94,11 +95,11 @@
       <h1>
         End Date
       </h1>
-      <input type="date" [(ngModel)]="enddate" >
+      <input type="date" [(ngModel)]="enddate"class="form-control" >
   </div>
   <div class="col-sm" >
     <h1>location</h1>
-    <select [(ngModel)]="location">
+    <select [(ngModel)]="location" class="form-control">
       <option value="pune">pune</option>
       <option value="mumbai">mumbai</option>
       <option value="delhi">delhi</option>

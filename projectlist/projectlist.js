@@ -55,6 +55,7 @@ doc.save((err,data)=>{
 })
 }
 exports.getcount=(req,res)=>{
+    var date=new Date();
     MongoClient.connect(url,{useNewUrlParser:true,useUnifiedTopology:true},function(err, db) {
         if (err) throw err;
         console.log(db);
@@ -75,7 +76,7 @@ exports.getcount=(req,res)=>{
                 dbo.collection("projectlists").countDocuments({status:"completed"},(err,result3)=>{
                     if(err) throw err;
                     var completed=result3;
-                dbo.collection("projectlists").countDocuments({status:"Registered"},(err,result4)=>{
+                dbo.collection("projectlists").countDocuments({endDate:{$lt:date},status:"running"},(err,result4)=>{
                     var registered=result4;
                     var data={
                         documentcount:documentcount,

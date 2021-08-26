@@ -2,6 +2,7 @@ import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateprojectComponent } from './createproject/createproject.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { ProjectlistComponent } from './projectlist/projectlist.component';
 
@@ -10,8 +11,8 @@ const routes: Routes = [
   {path:"login",component:LoginComponent},
   {path:"dashboard",component:DashboardComponent},
   {path:"createproject",component:CreateprojectComponent},
-  {path:"projectlist",component:ProjectlistComponent}
-
+  {path:"projectlist",component:ProjectlistComponent},
+  {path:"header",component:HeaderComponent}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
