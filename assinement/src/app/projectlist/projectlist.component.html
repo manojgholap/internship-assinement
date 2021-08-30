@@ -19,27 +19,37 @@
 
   <nav class="navbar navbar-light bg-light">
     <form class="form-inline">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="pname" [(ngModel)]="pname"
+     (ngModelChange)="search()" >
+     <!-- <h4>sortBy</h4> &nbsp; -->
+     <!-- <div class="row ">
+      <div class="col-sm">
+          <select name="sortbyvalue"[(ngModel)]="sortbyvalue" class="form-control mr-sm-2" >
+          <option value="pname">ProjectName</option>
+          <option value="department">Department</option>
+          <option value="category">Category</option>
+        </select>
+      </div>
+     </div> -->
     </form>
   </nav>    
     <table class="table table-hover">
       <thead>
         <tr class="text-center">
-          <th>ProjectName</th>
-          <th>Category</th>
-          <th>Department</th>
-          <th>Type</th>
-          <th>Location</th>
-          <th>Priority</th>
-          <th>Reason</th>
-          <th>StartDate</th>
-          <th>EndDate</th>
-          <th>Status</th>
+          <th (click)="sort(pname)">ProjectName &nbsp;<span class="fa fa-sort-desc"></span></th>
+          <th (click)="sort(category)">Category &nbsp; <i class="fa fa-sort"></i></th>
+          <th (click)="sort(department)">Department &nbsp; <i class="fa fa-sort"></i></th>
+          <th (click)="sort(type)">Type &nbsp; <i class="fa fa-sort"></i></th>
+          <th (click)="sort(location)">Location &nbsp; <i class="fa fa-sort"></i></th>
+          <th (click)="sort(priority)">Priority &nbsp; <i class="fa fa-sort"></i></th>
+          <th (click)="sort(reason)">Reason &nbsp; <i class="fa fa-sort"></i></th>
+          <th (click)="sort(startDate)">StartDate &nbsp; <i class="fa fa-sort"></i></th>
+          <th (click)="sort(endDate)">EndDate &nbsp; <i class="fa fa-sort"></i></th>
+          <th (click)="sort(status)">Status &nbsp; <i class="fa fa-sort"></i></th>
           <th>Action</th>
         </tr>
       </thead>
-      <tbody *ngFor="let item of resdata">
+      <tbody *ngFor="let item of  resdata | orderBy : key : reverse| paginate: {itemsPerPage:5,currentPage :p}">
         <tr>
           <td>{{item.pname}}</td>
           <td>{{item.category}}</td>
@@ -62,5 +72,6 @@
           </td>
         </tr>
       </tbody>
+      <pagination-controls (pageChange)="p=$event"></pagination-controls>
     </table>
   </div>

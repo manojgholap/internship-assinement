@@ -168,6 +168,7 @@ exports.projectlist=(req,res)=>{
 
                   }
               res.send(resdata)
+              console.log(result);
                 }
                 else{
                     resdata={
@@ -176,10 +177,26 @@ exports.projectlist=(req,res)=>{
                         data:err
                     }
                 res.send(resdata)
+                console.log(result)
                 }
               }
               db.close();
             })
             ) 
         })
+}
+exports.getcount1=(req,res)=>{
+    var date=new Date();
+    MongoClient.connect(url,{useNewUrlParser:true,useUnifiedTopology:true},function(err, db) {
+        if (err) throw err;
+        console.log(db);
+        var dbo = db.db("assinement");
+        dbo.collection("projectlists").aggregate([
+            {"$group" : {_id:{status:"$status"}, count:{$sum:1}}},
+            {$sort:{"count":-1}}
+        ],(err,result)=>{
+            if (err) throw err
+            console.log(result)
+        })
+    })
 }

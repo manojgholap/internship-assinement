@@ -47,3 +47,20 @@
     </div>
   </nav> -->
 </div>
+<div class="container-fluid">
+  <div class="container text-center">
+    <div class="container pt-3">
+      <h1 >Project Plan Vs Actual Plan</h1>
+    </div>
+<div class="chart-wrapper">
+  <canvas baseChart 
+  [datasets]="barChartData"
+  [labels]="barChartLabels"
+  [options]="barChartOptions"
+  [plugins]="barChartPlugins"
+  [legend]="barChartLegend"
+  [chartType]="barChartType">
+</canvas>
+</div>
+</div>
+</div>

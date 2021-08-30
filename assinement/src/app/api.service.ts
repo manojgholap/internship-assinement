@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,15 @@ export class ApiService {
   res:any
   url='http://localhost:8000/'
   constructor(private http:HttpClient,private router:Router) { }
+
+  private _listner = new Subject<any>();
+  listen ():Observable<any>{
+    return this._listner.asObservable()
+  }
+  filter(filterby:string){
+    this._listner.next(filterby)
+  }
+
   loginApi(data:any){
     this.http.post(this.url+'login',data).subscribe((res)=>{
       this.res=res;
@@ -42,7 +52,7 @@ export class ApiService {
       if(this.res.status==true){
        window.alert('status updated')
        this.router.navigate(['/projectlist']);
-       location.reload();
+       this.filter("project list")
       }
       else{
         window.alert('unable to update status')
