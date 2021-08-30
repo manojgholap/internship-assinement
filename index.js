@@ -56,6 +56,6 @@ app.post('/createproject',projectlist.createproject);
 app.post('/updatestatus',projectlist.updatestatus);
 app.get('/projectlist',projectlist.projectlist);
 app.get('/getcount',projectlist.getcount);
-app.get('/getcount1',projectlist.getcount1);
+app.get('/getBarCount',projectlist.getBarCount);
 app.listen(8000);
 console.log('server is started at port 8000');
