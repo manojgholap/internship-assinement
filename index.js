@@ -1,10 +1,10 @@
 var express = require("express");
 var app = express();
-var bodyParser = require("body-parser");
 var cors=require('cors');
 var login=require('./login/login');
-var projectlist=require('./projectlist/projectlist')
-// handle cors 
+var projectList=require('./projectlist/projectlist')
+
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -21,41 +21,39 @@ app.use(function (req, res, next) {
 app.use(
   cors()
   )
+
 app.use(
-  bodyParser.urlencoded({
-    extended: false
-  })
-);
-//app.use(bodyParser.json());
-app.use(
-  bodyParser.json({
+  express.json({
     limit: "50mb",
     extended: true,
     type: "application/json"
-  })
+  },)
 );
+
 app.use(
-  bodyParser.urlencoded({
+  express.urlencoded({
     limit: "50mb",
     extended: true,
     type: "application/x-www-form-urlencoding"
   })
 );
 app.use(
-  bodyParser.json({
+  express.json({
     type: "application/json"
   })
 );
 app.use(
-  bodyParser.raw({
+ express.raw({
     limit: "50mb"
   })
 );
 app.post('/login',login.signIn);
-app.post('/createproject',projectlist.createproject);
-app.post('/updatestatus',projectlist.updatestatus);
-app.get('/projectlist',projectlist.projectlist);
-app.get('/getcount',projectlist.getcount);
-app.get('/getBarCount',projectlist.getBarCount);
+app.post('/createproject',projectList.createProject);
+app.post('/updatestatus',projectList.updateStatus);
+app.get('/projectlist',projectList.projectList);
+app.get('/getcount',projectList.getCount);
+app.get('/getBarCount',projectList.getBarCount);
+app.get('/getBarCount1',projectList.getBarCount1);
+
 app.listen(8000);
 console.log('server is started at port 8000');

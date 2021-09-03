@@ -3,23 +3,9 @@
 <div class="container text-center">
   <h1>Create Project</h1>
 </div>
-  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/projectlist">List Project</a>
-        </li>
-      </ul>
-    </div>
-  </nav> -->
   <br>
-  <!-- <label for="projectname">Project Name</label> -->
   <div ><label for="projectname"><h1>Project Name</h1></label><br>
-    <input type="text" class="form-control" name="projectname" placeholder="project name" [(ngModel)]="projectname">
+    <input type="text" class="form-control" name="projectName" placeholder="project name" [(ngModel)]="projectName">
   </div>
   <div class="row">
       <div class="col-sm" >
@@ -87,7 +73,7 @@
       Starting Date
     </h1>
     <div>  
-      <input type="date" [(ngModel)]="startdate" class="form-control">  
+      <input type="date" [(ngModel)]="startDate" class="form-control">  
      
   </div>
   </div>
@@ -95,7 +81,7 @@
       <h1>
         End Date
       </h1>
-      <input type="date" [(ngModel)]="enddate"class="form-control" >
+      <input type="date" [(ngModel)]="endDate"class="form-control" >
   </div>
   <div class="col-sm" >
     <h1>location</h1>

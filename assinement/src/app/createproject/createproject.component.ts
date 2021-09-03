@@ -6,22 +6,22 @@ import { ApiService } from '../api.service';
   styleUrls: ['./createproject.component.css']
 })
 export class CreateprojectComponent implements OnInit {
-  projectname:any;
-  reason:any;
-  type:any;
-  division:any;
-  category:any;
-  Priority:any;
-  department:any;
-  location:any;
-  startdate:any;
-  enddate:any;
+  projectName:string='';
+  reason:string='';
+  type:string='';
+  division:string='';
+  category:string='';
+  Priority:string='';
+  department:string='';
+  location:string='';
+  startDate:string='';
+  endDate:string='';
   constructor(public ApiService:ApiService) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
   }
-  createproject(){
-    if(!this.projectname)
+public createproject(){
+    if(!this.projectName)
     {
       window.alert("please enter project name");
     }
@@ -46,16 +46,16 @@ export class CreateprojectComponent implements OnInit {
     else if(!this.location){
       window.alert("please select location");
     }
-    else if(!this.startdate){
+    else if(!this.startDate){
       window.alert("please select startdate");
     }
-    else if(!this.enddate){
+    else if(!this.endDate){
       window.alert("please select enddate");
     }
     else{
-    
-   var data={
-    pname:this.projectname,
+
+    let data={
+    pname:this.projectName,
     reason:this.reason,
     type:this.type,
     division:this.division,
@@ -63,10 +63,10 @@ export class CreateprojectComponent implements OnInit {
     priority:this.Priority,
     department:this.department,
     location:this.location,
-    startdate:this.startdate,
-    enddate:this.enddate
+    startDate:this.startDate,
+    endDate:this.endDate
     }
-    this.ApiService.createproject(data);
+    this.ApiService.createProject(data);
   }
 }
 }

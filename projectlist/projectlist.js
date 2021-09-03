@@ -1,28 +1,14 @@
 const mongoose = require('mongoose');
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/"
-const projectlistschema = new mongoose.Schema({
-    pname: String,
-    reason: String,
-    type: String,
-    category: String,
-    priority: String,
-    department: String,
-    startDate: Date,
-    endDate: Date,
-    location: String,
-    status: {
-        type: String,
-        default: "Registered"
-    }
-})
-exports.createproject = (req, res) => {
-    mongoose.connect("mongodb://localhost:27017/assinement", { useNewUrlParser: true, useUnifiedTopology: true })
-        .then(() => console.log("connection successfully"))
-        .catch((err) => { console.log(err) })
-    
-    const ProjectList = new mongoose.model("projectlists", projectlistschema)
-    console.log(req.body);
+const MongoClient = require('mongodb').MongoClient;
+let url = 'mongodb://localhost:27017/assinement'
+let projectlistschema = require('../projectlist/createproject');
+let async = require('async');
+let count = require('./count');
+let conn = mongoose.createConnection("mongodb://localhost:27017/assinement", { useNewUrlParser: true, useUnifiedTopology: true })
+// let conn = require('../projectlist/db')
+exports.createProject = (req, res) => {
+
+    const ProjectList = conn.model("projectlists", projectlistschema)
     const doc = new ProjectList({
         pname: req.body.pname,
         reason: req.body.reason,
@@ -30,8 +16,8 @@ exports.createproject = (req, res) => {
         category: req.body.category,
         priority: req.body.priority,
         department: req.body.department,
-        startDate: req.body.startdate,
-        endDate: req.body.enddate,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
         location: req.body.location,
     })
     doc.save((err, data) => {
@@ -53,61 +39,100 @@ exports.createproject = (req, res) => {
         }
     })
 }
-exports.getcount = (req, res) => {
-    var date = new Date();
-    MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-        if (err) throw err;
-        console.log(db);
-        var dbo = db.db("assinement");
-        // dbo.collection("projectlists").aggregate([
-        //     {"$group" : {_id:{status:"$status"}, count:{$sum:1}}},
-        //     {$sort:{"count":-1}}
-        // ],(err,result)=>{
-        dbo.collection("projectlists").countDocuments({}, (err, result) => {
-            if (err) throw err;
-            var documentcount = result;
-            dbo.collection("projectlists").countDocuments({ status: "canceled" }, (err, result1) => {
+exports.getCount = (req, res) => {
+    const task = [
+        function countDocuments(cb) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
                 if (err) throw err;
-                var canceled = result1
-                dbo.collection("projectlists").countDocuments({ status: "running" }, (err, result2) => {
-                    if (err) throw err;
-                    var running = result2;
-                    dbo.collection("projectlists").countDocuments({ status: "completed" }, (err, result3) => {
-                        if (err) throw err;
-                        var completed = result3;
-                        dbo.collection("projectlists").countDocuments({ endDate: { $lt: date }, status: "running" }, (err, result4) => {
-                            var registered = result4;
-                            var data = {
-                                documentcount: documentcount,
-                                canceled: canceled,
-                                running: running,
-                                completed: completed,
-                                registered: registered
-                            }
-                            if (err) {
-                                resdata = {
-                                    status: false,
-                                    err: err
-                                }
-                                res.send(resdata)
-                            }
-                            else {
-                                resdata = {
-                                    status: true,
-                                    message: "fetched",
-                                    countdata: data
-                                }
-                                res.send(resdata)
-                                console.log(resdata);
-                            }
-                        })
-                    })
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({}, (err, result) => {
+                    if (err) {
+                        cb(err);
+                    }
+                    else {
+                        cb(null, result)
+                    }
                 })
             })
-        })
+        },
+        function countDocumentsCompleted(callback) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ status: "completed" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        },
+        function countDocumentsRunning(callback) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ status: "running" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        },
+        function countDocumentsDelay(callback) {
+            let date = new Date()
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ endDate: { $gt: date }, status: "running" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        },
+        function countDocumentsCanceled(callback) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ status: "canceled" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        },
+    ];
+    async.series(task, (err, result) => {
+        if (err) {
+            resdata = {
+                status: false,
+                err: err
+            }
+            res.send(resdata)
+        }
+        else {
+            resdata = {
+                status: true,
+                data: result,
+                message: 'counted'
+            }
+        }
+        res.send(resdata);
     })
 }
-exports.projectlist = (req, res) => {
+
+exports.projectList = (req, res) => {
     MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
         if (err) throw err;
         var dbo = db.db("assinement");
@@ -132,7 +157,7 @@ exports.projectlist = (req, res) => {
         });
     });
 }
-exports.updatestatus = (req, res) => {
+exports.updateStatus = (req, res) => {
 
     var data = req.body;
     var id = data.id;
@@ -164,7 +189,6 @@ exports.updatestatus = (req, res) => {
 
                     }
                     res.send(resdata)
-                    console.log(result);
                 }
                 else {
                     resdata = {
@@ -173,7 +197,6 @@ exports.updatestatus = (req, res) => {
                         data: err
                     }
                     res.send(resdata)
-                    console.log(result)
                 }
             }
             db.close();
@@ -181,96 +204,132 @@ exports.updatestatus = (req, res) => {
         )
     })
 }
-exports.getBarCount = (req, res) => {
-    MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-        if (err) throw err;
-        console.log(db);
-        var dbo = db.db("assinement");
-        // dbo.collection("projectlists").aggregate([
-        //     {"$group" : {_id:{status:"$status"}, count:{$sum:1}}},
-        //     {$sort:{"count":-1}}
-        // ],(err,result)=>{
-        dbo.collection("projectlists").countDocuments({ department: "startergy" }, (err, result) => {
-            if (err) throw err;
-            var startergy = result;
-            dbo.collection("projectlists").countDocuments({ department: "startergy", status: "completed" }, (err, result1) => {
+
+
+exports.getBarCount = ( res) => {
+   
+    async.series(count.tasks, (err, result) => {
+        if (err) {
+            resdata = {
+                status: false,
+                err: err
+            }
+            res.send(resdata)
+        }
+        else {
+            resdata = {
+                status: true,
+                data: result,
+                message: 'counted'
+            }
+        }
+        res.send(resdata);
+    })
+}
+
+exports.getBarCount1 = (req, res) => {
+    const task = [
+        function countDocumentStartergy(cb) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
                 if (err) throw err;
-                var startergycompleted = result1;
-                dbo.collection("projectlists").countDocuments({ department: "finance" }, (err, result2) => {
-                    if (err) throw err;
-                    var finance = result2;
-
-                    dbo.collection("projectlists").countDocuments({ department: "finance", status: "completed" }, (err, result3) => {
-                        if (err) throw err;
-                        var financecompleted = result3;
-
-                        dbo.collection("projectlists").countDocuments({ department: "quality" }, (err, result4) => {
-                            if (err) throw err;
-                            var quality = result4;
-                            dbo.collection("projectlists").countDocuments({ department: "quality", status: "completed" }, (err, result5) => {
-                                if (err) throw err;
-                                var qualitycompleted = result5;
-                                dbo.collection("projectlists").countDocuments({ department: "maintainance" }, (err, result6) => {
-                                    if (err) throw err;
-                                    var maintainance = result6;
-                                    dbo.collection("projectlists").countDocuments({ department: "maintainance", status: "completed" }, (err, result7) => {
-                                        if (err) throw err;
-                                        var maintainancecompleted = result7;
-                                        dbo.collection("projectlists").countDocuments({ department: "store" }, (err, result8) => {
-                                            if (err) throw err;
-                                            var store = result8;
-                                            dbo.collection("projectlists").countDocuments({ department: "store", status: "completed" }, (err, result9) => {
-                                                if (err) throw err;
-                                                var storecompleted = result9;
-                                                dbo.collection("projectlists").countDocuments({ department: "hr" }, (err, result10) => {
-                                                    if (err) throw err;
-                                                    var hr = result10;
-                                                    dbo.collection("projectlists").countDocuments({ department: "hr", status: "completed" }, (err, result11) => {
-
-                                                        var hrcompleted = result11;
-
-                                                        var data = {
-                                                            startergy: startergy,
-                                                            startergycompleted: startergycompleted,
-                                                            finance: finance,
-                                                            financecompleted: financecompleted,
-                                                            quality: quality,
-                                                            qualitycompleted:qualitycompleted,
-                                                            maintainance:maintainance,
-                                                            maintainancecompleted:maintainancecompleted,
-                                                            store:store,
-                                                            storecompleted:storecompleted,
-                                                            hr:hr,
-                                                            hrcompleted:hrcompleted
-                                                        }
-                                                        if (err) {
-                                                            resdata = {
-                                                                status: false,
-                                                                err: err
-                                                            }
-                                                            res.send(resdata)
-                                                        }
-                                                        else {
-                                                            resdata = {
-                                                                status: true,
-                                                                message: "fetched",
-                                                                countdata: data
-                                                            }
-                                                            res.send(resdata)
-                                                            console.log(resdata);
-                                                        }
-
-                                                    })
-                                                })
-                                            })
-                                        })
-                                    })
-                                })
-                            })
-                        })
-                    })
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ department: "startergy", status: "completed" }, (err, result) => {
+                    if (err) {
+                        cb(err);
+                    }
+                    else {
+                        cb(null, result)
+                    }
                 })
             })
-        })
+        },
+        function countDocumentsFinance(callback) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ department: "finance", status: "completed" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        },
+        function countDocumentsQuality(callback) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ department: "quality", status: "completed" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        },
+        function countDocumentMaintainance(callback) {
+            let date = new Date()
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ department: "maintainance", status: "completed" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        },
+        function countDocumentsStore(callback) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ department: "store", status: "completed" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        },
+        function countDocumentHr(callback) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                dbo = db.db("assinement");
+                dbo.collection("projectlists").countDocuments({ department: "hr", status: "completed" }, (err, result) => {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        callback(null, result)
+                    }
+                })
+            })
+        }
+    ];
+    async.series(task, (err, result) => {
+        if (err) {
+            resdata = {
+                status: false,
+                err: err
+            }
+            res.send(resdata)
+        }
+        else {
+            resdata = {
+                status: true,
+                data: result,
+                message: 'counted'
+            }
+        }
+        res.send(resdata);
     })
 }

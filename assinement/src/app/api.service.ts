@@ -12,14 +12,14 @@ export class ApiService {
   constructor(private http:HttpClient,private router:Router) { }
 
   private _listner = new Subject<any>();
-  listen ():Observable<any>{
+ public listen ():Observable<any>{
     return this._listner.asObservable()
   }
-  filter(filterby:string){
+  public filter(filterby:string){
     this._listner.next(filterby)
   }
 
-  loginApi(data:any){
+ public loginApi(data:object):void{
     this.http.post(this.url+'login',data).subscribe((res)=>{
       this.res=res;
       if(this.res.status==true){
@@ -31,7 +31,7 @@ export class ApiService {
       }
     })
   }
-  createproject(data:any){
+ public createProject(data:any):void{
     this.http.post(this.url+"createproject",data).subscribe((res)=>{
       this.res=res;
       if(this.res.status==true){
@@ -43,10 +43,7 @@ export class ApiService {
       }
     })
   }
-  getcount(data:any){
-
-  }
-  updatestatus(data:any){
+ public updateStatus(data:object):void{
     this.http.post(this.url+"updatestatus",data).subscribe((res)=>{
       this.res=res;
       if(this.res.status==true){

@@ -3,53 +3,29 @@
   <div class="text-center">
    <h2> Project list</h2>   
   </div>
-  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link"  routerLink="/createproject">Add Project</a>
-        </li>
-      </ul>
-    </div>
-  </nav> -->
-
   <nav class="navbar navbar-light bg-light">
     <form class="form-inline">
       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="pname" [(ngModel)]="pname"
      (ngModelChange)="search()" >
-     <!-- <h4>sortBy</h4> &nbsp; -->
-     <!-- <div class="row ">
-      <div class="col-sm">
-          <select name="sortbyvalue"[(ngModel)]="sortbyvalue" class="form-control mr-sm-2" >
-          <option value="pname">ProjectName</option>
-          <option value="department">Department</option>
-          <option value="category">Category</option>
-        </select>
-      </div>
-     </div> -->
     </form>
   </nav>    
     <table class="table table-hover">
       <thead>
         <tr class="text-center">
-          <th (click)="sort(pname)">ProjectName &nbsp;<span class="fa fa-sort-desc"></span></th>
-          <th (click)="sort(category)">Category &nbsp; <i class="fa fa-sort"></i></th>
-          <th (click)="sort(department)">Department &nbsp; <i class="fa fa-sort"></i></th>
-          <th (click)="sort(type)">Type &nbsp; <i class="fa fa-sort"></i></th>
-          <th (click)="sort(location)">Location &nbsp; <i class="fa fa-sort"></i></th>
-          <th (click)="sort(priority)">Priority &nbsp; <i class="fa fa-sort"></i></th>
-          <th (click)="sort(reason)">Reason &nbsp; <i class="fa fa-sort"></i></th>
-          <th (click)="sort(startDate)">StartDate &nbsp; <i class="fa fa-sort"></i></th>
-          <th (click)="sort(endDate)">EndDate &nbsp; <i class="fa fa-sort"></i></th>
-          <th (click)="sort(status)">Status &nbsp; <i class="fa fa-sort"></i></th>
+          <th>ProjectName</th>
+          <th >Category </th>
+          <th>Department </th>
+          <th >Type </th>
+          <th >Location </th>
+          <th >Priority </th>
+          <th >Reason </th>
+          <th >StartDate </th>
+          <th >EndDate </th>
+          <th >Status </th>
           <th>Action</th>
         </tr>
       </thead>
-      <tbody *ngFor="let item of  resdata | orderBy : key : reverse| paginate: {itemsPerPage:5,currentPage :p}">
+      <tbody *ngFor="let item of  resdata |  paginate: {itemsPerPage:5,currentPage :p}">
         <tr>
           <td>{{item.pname}}</td>
           <td>{{item.category}}</td>
@@ -67,8 +43,6 @@
     <button  class="btn btn-primary" (click)="close(item.pname)">close</button>
     &nbsp;
     <button  class="btn btn-danger" (click)="cancel(item.pname)">cancel</button>
-
-
           </td>
         </tr>
       </tbody>

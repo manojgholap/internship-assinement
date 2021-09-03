@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,Input,OnInit, EventEmitter,Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ChartOptions, ChartType, ChartDataSets} from 'chart.js';
-import { Label } from 'ng2-charts';
 import * as Chart from 'chart.js';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +10,10 @@ import * as Chart from 'chart.js';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  res:any
+  // @Input() parentData:string='';
+  url='http://localhost:8000/'
+  labels=['startergy', 'finance', 'quality', 'maintainance', 'store', 'hr']
+  res:any;
   canceled:any;
   running:any;
   completed:any;
@@ -19,74 +21,38 @@ export class DashboardComponent implements OnInit {
   documentcount:any;
   chart:any=[];
   resdata:any
-  constructor(private router:Router,public http:HttpClient) {
+  resData:any
 
+  constructor(private router:Router,public http:HttpClient) {
+      let password=localStorage.getItem('password');
+      let userName=localStorage.getItem('username')
+      console.log(userName+" "+password)
    }
 
-  ngOnInit(): void {
-    this.http.get("http://localhost:8000/getcount").subscribe((res:any)=>{
-        this.res=res.countdata;
-        this.canceled=this.res.canceled;
-        this.running=this.res.running;
-        this.completed=this.res.completed;
-        this.registered=this.res.registered;
-        this.documentcount=this.res.documentcount;
+ public ngOnInit(): void {
+    this.http.get(this.url+"getcount").subscribe((res:any)=>{
+        this.res=res.data
+        this.canceled=this.res[4];
+        this.running=this.res[2];
+        this.completed=this.res[1];
+        this.registered=this.res[3];
+        this.documentcount=this.res[0];
   })
-  this.http.get("http://localhost:8000/getBarCount").subscribe((res:any)=>{
-    this.resdata=res.countdata;
-    // console.log(this.resdata);
-    var startergy=this.resdata.startergy;
-    var startergycompleted=this.resdata.startergycompleted;
-    var finance=this.resdata.finance;
-    var financecompleted=this.resdata.financecompleted;
-    var quality=this.resdata.quality;
-    var qualitycompleted=this.resdata.qualitycompleted;
-    var maintainance=this.resdata.maintainance;
-    var maintainancecompleted=this.resdata.maintainancecompleted;
-    var store=this.resdata.store;
-    var storecompleted=this.resdata.storecompleted;
-    var hr=this.resdata.hr;
-    var hrcompleted=this.resdata.hrcompleted;
-      //     var canceled=this.res.canceled;
-      //   var running=this.res.running;
-      // var completed=this.res.completed;
-      //   var registered=this.res.registered;
-      //   var documentcount=this.res
-    //       let labeldata=[];
-    //       cdata.forEach((res:any)=>{
-    //         let mydata=res;
-    //         labeldata.push(mydata);
-    //       })
-      var chart = new Chart('canvas',{
+  this.http.get(this.url+'getBarCount').subscribe((res:any)=>{
+    this.resdata=res.data
+    this.http.get(this.url+'getBarCount1').subscribe((res:any)=>{
+      this.resData=res.data
+    
+     let chart = new Chart('canvas',{
         type:'bar',
         data:{
-          labels:['startergy', 'finance', 'quality', 'maintainance', 'store', 'hr'],
+          labels:this.labels,
           datasets:[
-            {data:[startergy,finance,quality,maintainance,store,hr],label:'project Registered',backgroundColor:"rgb(0, 255, 0);"},
-            {data:[startergycompleted,financecompleted,qualitycompleted,maintainancecompleted,storecompleted,hrcompleted],label:'project completed',backgroundColor:"orange"},
+            {data:this.resdata,label:'project Registered',backgroundColor:"rgb(0, 255, 0);"},
+            {data:this.resData,label:'project completed',backgroundColor:"orange"},
           ]},     
 })
 })
-  
+}) 
 }
-addproject(){
-  this.router.navigate(['/createproject']);
-}
-listproject(){
-  this.router.navigate(['/projectlist']);
-
-}
-
-barChartOptions: ChartOptions = {
-  responsive: true,
-};
-barChartLabels: Label[] = ['startergy', 'finance', 'quality', 'maintainance', 'store', 'hr'];
-barChartType: ChartType = 'bar';
-barChartLegend = true;
-barChartPlugins = [];
-
-barChartData: ChartDataSets[] = [
-  { data: [54,20,30,49,50,44],label:"Project Registered "},
-  { data: [46,11,18,33,39,35],label:"Project Completed"}
-];
 }
