@@ -9,7 +9,6 @@ import { ApiService } from '../api.service'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  // userData="hello from child "
   userName:string='';
   password: string='';
   userMessage: any;
@@ -29,9 +28,7 @@ export class LoginComponent {
         userName: this.userName,
         password: this.password
       }
-      localStorage.setItem('username',this.userName);
-      localStorage.setItem('password',this.password);
-      // this.userData=this.userName
+      this.ApiService.getFromParent(data);
       this.ApiService.loginApi(data)
     }
   }

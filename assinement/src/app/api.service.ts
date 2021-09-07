@@ -9,6 +9,7 @@ import { Observable, Subject } from 'rxjs';
 export class ApiService {
   res:any
   url='http://localhost:8000/'
+  data:any;
   constructor(private http:HttpClient,private router:Router) { }
 
   private _listner = new Subject<any>();
@@ -18,7 +19,6 @@ export class ApiService {
   public filter(filterby:string){
     this._listner.next(filterby)
   }
-
  public loginApi(data:object):void{
     this.http.post(this.url+'login',data).subscribe((res)=>{
       this.res=res;
@@ -31,6 +31,13 @@ export class ApiService {
       }
     })
   }
+
+ getFromParent(data:any){
+   this.data=data;
+}
+sendToChild(){
+ return this.data;
+}
  public createProject(data:any):void{
     this.http.post(this.url+"createproject",data).subscribe((res)=>{
       this.res=res;

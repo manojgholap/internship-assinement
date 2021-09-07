@@ -22,11 +22,11 @@ export class DashboardComponent implements OnInit {
   chart:any=[];
   resdata:any
   resData:any
+  data:any
 
-  constructor(private router:Router,public http:HttpClient) {
-      let password=localStorage.getItem('password');
-      let userName=localStorage.getItem('username')
-      console.log(userName+" "+password)
+  constructor(private ApiService:ApiService,public http:HttpClient) {
+    this.data=this.ApiService.sendToChild();
+    console.log(this.data);
    }
 
  public ngOnInit(): void {
