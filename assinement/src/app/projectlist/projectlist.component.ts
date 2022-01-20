@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../api.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-projectlist',
@@ -8,6 +9,8 @@ import { ApiService } from '../api.service';
   styleUrls: ['./projectlist.component.css']
 })
 export class ProjectlistComponent implements OnInit {
+  userForm:FormGroup;
+  listData:any
   resdata:any
   pname:any;
   category:any;
@@ -23,8 +26,29 @@ export class ProjectlistComponent implements OnInit {
   reverse:boolean=false;
   url="http://localhost:8000/"
 
-  constructor(private http:HttpClient,public apiService:ApiService) { }
+  constructor(private http:HttpClient,public apiService:ApiService,private fb:FormBuilder) {
+    this.listData=[]; 
+    this.userForm = this.fb.group({
+      key:['',Validators.required],
+      value:['',Validators.required],
+    })
+  }
 
+  addItem(){
+    this.listData.push(this.userForm.value);
+    this.userForm.reset()
+  }
+  reset(){
+    this.userForm.reset()
+  }
+  removeItem(element:any){
+    this.listData.forEach((value:any,index:any)=>{
+      if(value==element){
+        this.listData.splice(index,1);
+
+      }
+    })
+  }
  public ngOnInit(): void {
     this.http.get(this.url+"projectlist").subscribe((res)=>{
       this.resdata=res

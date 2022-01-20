@@ -1,27 +1,11 @@
 <div class="modal-dialog modal-login">
   <div class="modal-content">
-    <form>
       <div class="modal-header">
-        <h4 class="modal-title">Login</h4>
+        <h4 class="modal-title">Sign In with Google</h4>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label>Username</label>
-          <input type="text" class="form-control" required="required" name="userName" [(ngModel)]="userName">
-          <span style="color:red; text-align: center;" ng-show="auditmessage">{{userMessage}}</span>
-        </div>
-        <div class="form-group">
-          <div class="clearfix">
-            <label>Password</label>
-          </div>
-          <input type="password" class="form-control" required="required" name="password" [(ngModel)]="password">
-          <span style="color:red; text-align: center;" ng-show="auditmessage">{{passwordMessage}}</span>
-        </div>
+        <button class="btn btn-primary" (click)="login()"><i class="bi bi-google"></i>&nbsp;Sign In</button>
       </div>
-      <div class="modal-footer justify-content-between">
-        <button class="btn btn-primary" (click)="login()">login</button>
-      </div>
-    </form>
   </div>
   
   <!-- <app-dashboard [parentData]="userData" disabled="true"></app-dashboard> -->

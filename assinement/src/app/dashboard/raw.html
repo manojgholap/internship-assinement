@@ -1,0 +1,63 @@
+
+<div class="tab-pane h-100 fade active show" id="pills-req-content" role="tabpanel">
+    <div class="mb-3"> <select class="custom-select d-block w-100" id="contentType">
+        <option value="URLENCODED">FORM URL Encoded (application/x-www-form-urlencoded)</option>
+        <option value="JSON" selected="selected">JSON (application/json)</option>
+        <option value="HTML">HTML (text/html)</option>
+        <option value="XML">XML (application/xml)</option>
+        <option value="TEXT">TEXT (text/plain)</option>
+        <option value="CUSTOM">CUSTOM (from Headers)</option>
+      </select> </div>
+    <div class="mb-3 content-data"> <textarea class="form-control code-area" id="content" name="content"
+        data-hj-whitelist="" style="display: none;"></textarea>
+      <div class="CodeMirror cm-s-default">
+        <div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 54px; left: 31.7969px;"><textarea
+            autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0"
+            style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea>
+        </div>
+        <div class="CodeMirror-vscrollbar" tabindex="-1" cm-not-content="true" style="bottom: 0px; display: block;">
+          <div style="min-width: 1px; height: 82px;"></div>
+        </div>
+        <div class="CodeMirror-hscrollbar" tabindex="-1" cm-not-content="true" style="right: 17px; left: 0px;">
+          <div style="height: 100%; min-height: 1px; width: 0px;"></div>
+        </div>
+        <div class="CodeMirror-scrollbar-filler" cm-not-content="true" style="height: 17px; width: 17px;"></div>
+        <div class="CodeMirror-gutter-filler" cm-not-content="true"></div>
+        <div class="CodeMirror-scroll" tabindex="-1">
+          <div class="CodeMirror-sizer"
+            style="margin-left: 17px; min-width: 138.953px; margin-bottom: -17px; border-right-width: 13px; min-height: 80px; padding-right: 17px; padding-bottom: 0px;">
+            <div style="position: relative; top: 0px;">
+              <div class="CodeMirror-lines" role="presentation">
+                <div role="presentation" style="position: relative; outline: none;">
+                  <div class="CodeMirror-measure">
+                    <pre class="CodeMirror-line-like"><span>xxxxxxxxxx</span></pre>
+                  </div>
+                  <div class="CodeMirror-measure"></div>
+                  <div style="position: relative; z-index: 1;"></div>
+                  <div class="CodeMirror-cursors" style="visibility: hidden;">
+                    <div class="CodeMirror-cursor" style="left: 12.7969px; top: 48px; height: 24px;">&nbsp;</div>
+                  </div>
+                  <div class="CodeMirror-code" role="presentation">
+                    <pre class=" CodeMirror-line "
+                      role="presentation"><span role="presentation" style="padding-right: 0.1px;"></span></pre>
+                    <pre class=" CodeMirror-line "
+                      role="presentation"><span role="presentation" style="padding-right: 0.1px;">  <span class="cm-string cm-property">"key"</span>:<span class="cm-string">"value"</span></span></pre>
+                    <pre class=" CodeMirror-line "
+                      role="presentation"><span role="presentation" style="padding-right: 0.1px;"></span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="position: absolute; height: 13px; width: 1px; border-bottom: 0px solid transparent; top: 80px;">
+          </div>
+          <div class="CodeMirror-gutters" style="height: 93px; left: 0px;">
+            <div class="CodeMirror-gutter CodeMirror-lint-markers"></div>
+          </div>
+        </div>
+      </div>
+      <div class="Hljs gutter" style="display: none;">
+        <pre id="contentHljs"></pre>
+      </div>
+    </div>
+  </div>

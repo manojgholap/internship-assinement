@@ -3,8 +3,45 @@ let url = 'mongodb://localhost:27017/assinement'
 let projectlistschema = require('../projectlist/createproject');
 let async = require('async');
 let count = require('./count');
+const firebaseAdminInstance= require('firebase-admin');
 let conn = mongoose.createConnection("mongodb://localhost:27017/assinement", { useNewUrlParser: true, useUnifiedTopology: true })
 let projectLists=conn.collection('projectlists');
+
+
+exports.sendNotification=(req,res)=>{
+
+    const registrationToken = req.body.token;
+    projectLists.findOne({firebaseToken:registrationToken},(err,result)=>{
+        if(err){
+            console.log(err)
+        }
+        else if(result){
+            console.log("you have allready logged in ");    
+        }
+        else
+        {
+            const message = {
+                notification: {
+                  body: 'you have successfully login',
+                  title:'Marg Health',
+                  image : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fgirl%2F&psig=AOvVaw0ChvL2kIrDvtc2qCVPNIyN&ust=1634124804940000&source=images&cd=vfe&ved=0CAgQjRxqFwoTCMii-bfjxPMCFQAAAAAdAAAAABAD",
+                },
+                token: registrationToken
+                };
+                
+                // Send a message to the device corresponding to the provided
+                // registration token.
+                firebaseAdminInstance.messaging().send(message)
+                .then((response) => {
+                  // Response is a message ID string.
+                  console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                  console.log('Error sending message:', error);
+                });
+        }
+})
+}
 
 exports.createProject = (req, res) => {
 

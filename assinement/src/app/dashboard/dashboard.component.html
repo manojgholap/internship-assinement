@@ -1,48 +1,387 @@
-  <app-header></app-header>
-  <div class="container-fluid bg-light text-dark text-center"> 
-    <div class="container pt-3">
-        <h1 >Dashboard</h1>
-      </div>
-      <br>
-  <div class="container ">
-    <div class="row ">
-        <div class="col-sm" style="background-color:rgb(0, 255, 0);" >
-            <h1>Registered</h1>
-            <h1>{{documentcount}}</h1>  
-        </div>
-        &nbsp;
-        <div class="col-sm" style="background-color:yellow;">
-          <h1>Closed</h1>
-          <h1>{{completed}}</h1>
-      </div>
-      &nbsp;
-      <div class="col-sm" style="background-color:darkcyan;">
-        <h1>Running</h1>
-        <h1>{{running}}</h1>
-    </div>
-    &nbsp;
-        <div class="col-sm" style="background-color:orange;">
-        <h1>Delay</h1>
-        <h1>{{registered}}</h1>
-    </div>
-    &nbsp;
-        <div class="col-sm" style="background-color:rgb(154, 173, 172);">
-            <h1>Cancelled</h1>
-            <h1>{{canceled}}</h1>
-    </div>
-      </div>
-    </div>
-</div>
 <div class="container-fluid">
-  <div class="container text-center">
-    <div class="container pt-3">
-      <h1 >Project Plan Vs Actual Plan</h1>
-<div >
-<canvas id="canvas"></canvas>
-</div>
+  <div class="row  center" style="position: fixed;top: 0;left: 0;right: 0;z-index:1000;">
+    <div class="col-sm-12 row bg-light">
+      <div class="col-sm-4">
+        <span class="tye-label">TYE</span> &nbsp;
+        <span class="tye-sub-label text-muted">Test Your Endpoint...</span>
+      </div>
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+        <div class="d-flex justify-content-end mt-2">
+          <span>Hello <b>{{username}}</b></span>
+          <i class="bi bi-box-arrow-right btn btn-danger" (click)="logout()"></i>
+        </div>
+      </div>
 
-<br>
-<br>
-<br>
+    </div>
+  </div>
+  <div class="row" style="margin-top:6%;">
+    <div class="col-sm-2 w-25">
+      <div id="viewport">
+        <!-- Sidebar -->
+        <div id="sidebar">
+          <div class="card  text-center">
+            <div class="card-header">
+              <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item w-50">
+                  <a class="nav-link" ngClass="{{toggleStatus}}" (click)="History()">History</a>
+                </li>
+                <li class="nav-item w-50">
+                  <a class="nav-link" ngClass="{{toggleStatus1}}" (click)="Collection()">Collection</a>
+                </li>
+              </ul>
+            </div>
+            <!-- History Div -->
+            <div class="card-body table-responsive " ngClass="{{toggleDiv}}">
+              <a class="btn btn-sm btn-outline-light text-dark p-2 bd-highlight" (click)="deleteAll()">Clear All</a>
+              <table class="table ">
+                <tbody *ngFor="let item of data">
+                  <tr>
+                    <td (click)="SetValue(item)" style="cursor: pointer;">{{item.data.method | titlecase}}</td>
+                    <td (click)="SetValue(item)" style="cursor: pointer;">{{item.data.url}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-danger" (click)="deleteOne(item._id)">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Collection Div -->
+            <div class="card-body" data-toggle="modal" data-target="#applicationModal" ngClass="{{toggleDiv1}}">
+              <button class="btn btn-sucess bg-light">Add Collection</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-10 w-75 ">
+      <div>
+        <div class="row mt-2">
+          <div class="col-sm-12 mb-2">
+            <div class="row">
+              <div class="col-sm-2">
+                <select class="form-select method " (change)="checkRequestMethodType(method)" id="selectBox"
+                  aria-label="Default select example" name="method" [(ngModel)]="method">
+                  <option value="post" selected>Post</option>
+                  <option value="get">Get</option>
+                  <option value="patch">Patch</option>
+                  <option value="put">Put</option>
+                  <option value="delete">Delete</option>
+                </select>
+              </div>
+              <div class="col-sm-4">
+                <input type="text" id="inputBox" class="form-control" value="{{url}}" placeholder="enter your url"
+                  name="url" [(ngModel)]="url" />
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-primary" (click)="send()">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="thick">
+        <div class="row bg-light pt-2 pb-2">
+          <!-- OPTIONS -->
+          <div class="col-sm-12 d-flex">
+            <a class="btn btn-sm m-0" ngClass="{{toggleStatusBody}}" (click)="showBodyDiv()">Body</a> &nbsp;
+            <a class="btn btn-sm m-0" ngClass="{{toggleStatusHeaders}}" (click)="showHeadersDiv()">Headers</a>&nbsp;
+            <a class="btn btn-sm m-0" ngClass="{{toggleStatusParams}}" (click)="showParamsDiv()">Params</a>&nbsp;
+            <a class="btn btn-sm m-0" ngClass="{{toggleStatusTests}}" (click)="showTestsDiv()">Tests</a>
+          </div>
+          <hr class="mt-2 mb-2">
+          <!-- OPTIONS DIV'S -->
+          <div class="col-sm-12">
+            <!-- REQUEST BODY -->
+            <div class="body-arguments" ngClass="{{toggleDivBody}}">
+              <div>
+                <a class="btn btn-sm" ngClass="{{formdata}}" (click)="formData()">Form-Data</a> &nbsp;
+                <a class="btn btn-sm " ngClass="{{urlencoded}}" (click)="urlEncoded()">urlEncoded</a>&nbsp;
+                <a class="btn btn-sm " ngClass="{{raw}}" (click)="Raw()">raw</a>&nbsp;
+                <a class="btn btn-sm" ngClass="{{binary}}" (click)="Binary()">binary</a>
+              </div>
+              <hr>
+              <!-- FORM DATA -->
+              <div class="formdata-arguments" ngClass="{{formDataDiv}}">
+                <div class="row">
+                  <div class="col-sm-6 border-right">
+                    <div class="col-md-12">
+                      <div class="form-group d-flex flex-row">
+                        <label class="col-sm-2">Type</label>
+                        <select class="form-select type" (change)="checkFormDataType(type)" id="selectBox" 
+                        name="type" [(ngModel)]="type">
+                          <option value="text">Text</option>
+                          <option value="file">File</option>
+                        </select>
+                      </div>
+                    </div>
+                    <form [formGroup]="formdataForm">
+                      <div class="form-row">
+
+                        <div class="col-md-12">
+                          <div class="form-group d-flex flex-row">
+                            <label class="col-sm-2">Key</label>
+                            <input type="text" formControlName="key" class="form-control col-sm-10" placeholder="key">
+                          </div>
+                        </div>
+
+                        <!-- <div class="col-md-12">
+                          <div class="form-group d-flex flex-row">
+                            <label class="col-sm-2">Value</label>
+                            <input type="text" formControlName="value" class="form-control col-sm-10"
+                              placeholder="value">
+                          </div>
+                        </div> -->
+
+                        <div class="col-md-12">
+                          <div class="form-group d-flex flex-row">
+                            <label class="col-sm-2">Value</label>
+                            <input type="file" formControlName="value" class="form-control col-sm-10"
+                              placeholder="value">
+                          </div>
+                        </div>
+
+                        <div class="col-md-12">
+                          <div class="form-group d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" (click)="addFormdataItem()">Add</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-primary" (click)="formdataReset()">Reset</button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </form>
+                  </div>
+                  <div class="col-sm-6">
+                    <table class="table text-center table-hover">
+                      <thead>
+                        <tr>
+                          <th>Key</th>
+                          <th>Value</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of bodyData">
+                          <td>{{item.key}}</td>
+                          <td>{{item.value}}</td>
+                          <td>
+                            <button type="button" class="btn btn-sm btn-danger"
+                              (click)="removefromdataItem(item)">Remove</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!-- URL ENCODED -->
+              <div class="url-arguments" ngClass="{{urlEncodedDiv}}">
+                <div class="row">
+                  <div class="col-sm-6 border-right">
+                    <form [formGroup]="bodyForm">
+                      <div class="form-row">
+
+                        <div class="col-md-12">
+                          <div class="form-group d-flex flex-row">
+                            <label class="col-sm-2">Key</label>
+                            <input type="text" formControlName="key" class="form-control col-sm-10" placeholder="key">
+                          </div>
+                        </div>
+
+                        <div class="col-md-12">
+                          <div class="form-group d-flex flex-row">
+                            <label class="col-sm-2">Value</label>
+                            <input type="text" formControlName="value" class="form-control col-sm-10"
+                              placeholder="value">
+                          </div>
+                        </div>
+
+                        <div class="col-md-12">
+                          <div class="form-group d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" (click)="addBodyItem()">Add</button> &nbsp;
+                            <button type="button" class="btn btn-primary" (click)="bodyReset()">Reset</button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </form>
+                  </div>
+                  <div class="col-sm-6">
+                    <table class="table text-center table-hover">
+                      <thead>
+                        <tr>
+                          <th>Key</th>
+                          <th>Value</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of bodyData">
+                          <td>{{item.key}}</td>
+                          <td>{{item.value}}</td>
+                          <td>
+                            <button type="button" class="btn btn-sm btn-danger"
+                              (click)="removeBodyItem(item)">Remove</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!-- RAW DATA-->
+              <div class="raw-arguments" ngClass="{{rawDiv}}">
+                <json-editor [options]="editorOptions" [(ngModel)]="jsondata" (change)="jsonData()"></json-editor>
+              </div>
+              <!-- BINARY -->
+              <div class="binary-arguments" ngClass="{{binaryDiv}}">binary</div>
+            </div>
+            <!-- REQUEST PARAMS -->
+            <div class="parms-arguments" ngClass="{{toggleDivParams}}">
+              <div class="row">
+                <div class="col-sm-6 border-right">
+                  <form [formGroup]="paramForm">
+                    <div class="form-row">
+
+                      <div class="col-md-12">
+                        <div class="form-group d-flex flex-row">
+                          <label class="col-sm-2">Key</label>
+                          <input type="text" formControlName="key" class="form-control col-sm-10" placeholder="key">
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="form-group d-flex flex-row">
+                          <label class="col-sm-2">Value</label>
+                          <input type="text" formControlName="value" class="form-control col-sm-10" placeholder="value">
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="form-group d-flex justify-content-end">
+                          <button type="button" class="btn btn-primary" (click)="addParamItem()">Add</button> &nbsp;
+                          <button type="button" class="btn btn-primary" (click)="paramReset()">Reset</button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </form>
+                </div>
+                <div class="col-sm-6">
+                  <table class="table text-center table-hover">
+                    <thead>
+                      <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of paramData">
+                        <td>{{item.key}}</td>
+                        <td>{{item.value}}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-danger"
+                            (click)="removeParamItem(item)">Remove</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- REQUEST HEADER -->
+            <div class="header-arguments" ngClass="{{toggleDivHeaders}}">
+              <div class="row">
+                <div class="col-sm-6 border-right">
+                  <form [formGroup]="headerForm">
+                    <div class="form-row">
+
+                      <div class="col-md-12">
+                        <div class="form-group d-flex flex-row">
+                          <label class="col-sm-2">Key</label>
+                          <input type="text" formControlName="key" class="form-control col-sm-10" placeholder="key">
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="form-group d-flex flex-row">
+                          <label class="col-sm-2">Value</label>
+                          <input type="text" formControlName="value" class="form-control col-sm-10" placeholder="value">
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="form-group d-flex justify-content-end">
+                          <button type="button" class="btn btn-primary" (click)="addHeaderItem()">Add</button> &nbsp;
+                          <button type="button" class="btn btn-primary" (click)="headerReset()">Reset</button>
+                        </div>
+                      </div>
+
+                    </div>
+                  </form>
+                </div>
+                <div class="col-sm-6">
+                  <table class="table text-center table-hover">
+                    <thead>
+                      <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of headerData">
+                        <td>{{item.key}}</td>
+                        <td>{{item.value}}</td>
+                        <td>
+                          <button type="button" class="btn btn-sm btn-danger"
+                            (click)="removeHeaderItem(item)">Remove</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- TEST -->
+            <div ngClass="{{toggleDivTests}}">
+              <textarea class="form-control " value="" id="" areacols="30" rows="10" [(ngModel)]="testCases">
+            </textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="thick">
+      <div>
+        <div class="row bg-light pt-2 pb-2">
+          <div class="col-sm-12">
+            <h4>Response</h4>
+            <hr>
+          </div>
+          <div class="col-sm-6">
+            <a class="btn " ngClass="{{StatusBody}}" (click)="showResBodyDiv()">Body</a> &nbsp;
+            <a class="btn " ngClass="{{StatusHeader}}" (click)="showResHeaderDiv()">Headers</a>&nbsp;
+            <a class="btn " ngClass="{{StatusTestResult}}" (click)="showResTestResultDiv()">Test Results</a>
+          </div>
+          <div class="col-sm-6 d-flex justify-content-end pr-2">
+            <span class="btn btn-success r-0">Status: {{resStatus}}</span>
+          </div>&nbsp;
+          <div ngClass="{{DivBody}}">
+            <textarea name="Response" class="form-control bg-white" disabled value="" id="" areacols="30"
+              rows="10">{{resBody | json}}</textarea>
+          </div>
+          <div ngClass="{{DivHeader}}">
+            <textarea class="form-control bg-white " disabled value="" id="" areacols="30"
+              rows="10">{{resHeaders | json}}</textarea>
+          </div>
+          <div ngClass="{{DivTestResult}}">
+            <textarea class="form-control bg-white" disabled value="" id="" areacols="30" rows="10"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<!-- <h1>{{parentData}}</h1> -->

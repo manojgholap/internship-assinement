@@ -1,7 +1,9 @@
 var express = require("express");
 var app = express();
 var cors=require('cors');
-var login=require('./login/login');
+// var login=require('./login/login');
+const servicekey= require('./servicekey/serviceKey.json');
+const firebaseAdminInstance= require('firebase-admin');
 var projectList=require('./projectlist/projectlist')
 
 
@@ -47,7 +49,12 @@ app.use(
     limit: "50mb"
   })
 );
-app.post('/login',login.signIn);
+firebaseAdminInstance.initializeApp({
+  credential:firebaseAdminInstance.credential.cert(servicekey)
+});
+
+app.post('/login',projectList.sendNotification);
+// app.post('/login',login.signIn);
 app.post('/createproject',projectList.createProject);
 app.post('/updatestatus',projectList.updateStatus);
 app.get('/projectlist',projectList.projectList);
